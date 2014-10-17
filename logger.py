@@ -2,6 +2,7 @@
 
 # imports
 from ctypes import windll, Structure, c_ulong, byref
+from time import gmtime,strftime
 import time, math, csv
 
 # Retrieve point
@@ -50,7 +51,9 @@ try:
 except KeyboardInterrupt:
     pass
 
+# CSV writer
 zipped = zip(posX,posY,deltaX,deltaY,magnitude)
-with open("output.csv","w",newline='') as f:
+timestamp = strftime("%Y-%m-%d-%H-%M-%S",gmtime())
+with open("Raw Outputs/%s.csv"%timestamp,"w",newline='') as f:
     writer = csv.writer(f)
     writer.writerows(zipped)
