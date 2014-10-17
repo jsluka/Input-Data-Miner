@@ -7,6 +7,7 @@ import time, math, csv
 # Retrieve point
 class POINT(Structure):
     _fields_ = [("x",c_ulong),("y",c_ulong)]
+    
 def queryMousePosition():
     pt = POINT()
     windll.user32.GetCursorPos(byref(pt))
@@ -34,17 +35,20 @@ step = 0
 tX,tY = queryMousePosition()
 prevX = tX
 prevY = tY
-while(step < 100):
-    step = step + 1
-    pX,pY = queryMousePosition()
-    dX = abs(prevX - pX)
-    dY = abs(prevY - pY)
-    prevX = pX
-    prevY = pY
-    mag = math.sqrt((dX*dX)+(dY*dY))
-    print("%5d... POS:(%4d,%4d), DELTA:(%4d,%4d), MAG:(%4.2f)"%(step,pX,pY,dX,dY,mag))
-    listAppender(pX,pY,dX,dY,mag)
-    time.sleep(0.1)
+try:
+    while(True):
+        step = step + 1
+        pX,pY = queryMousePosition()
+        dX = abs(prevX - pX)
+        dY = abs(prevY - pY)
+        prevX = pX
+        prevY = pY
+        mag = math.sqrt((dX*dX)+(dY*dY))
+        # print("%5d... POS:(%4d,%4d), DELTA:(%4d,%4d), MAG:(%4.2f)"%(step,pX,pY,dX,dY,mag))
+        listAppender(pX,pY,dX,dY,mag)
+        time.sleep(0.1)
+except KeyboardInterrupt:
+    pass
 
 zipped = zip(posX,posY,deltaX,deltaY,magnitude)
 with open("output.csv","w",newline='') as f:
