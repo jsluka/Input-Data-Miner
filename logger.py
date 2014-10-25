@@ -89,7 +89,9 @@ root.bind_all('<KeyPress>',keypress)
 root.bind_all('<KeyRelease>',keyrelease)
 root.withdraw()
 try:
-    while(True): # Logging loop! 
+    while(True): # Logging loop!
+        root.update()
+        print(step)
         step = step + 1
         pX,pY = queryMousePosition()
         dX = abs(prevX - pX)
@@ -99,7 +101,6 @@ try:
         mag = math.sqrt((dX*dX)+(dY*dY))
         if capture == 1: # Only logs when F9 was hit
             listAppender(pX,pY,dX,dY,mag,prevW,prevA,prevS,prevD)
-        root.update()
         time.sleep(0.1)
 except KeyboardInterrupt:
     pass
