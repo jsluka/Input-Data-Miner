@@ -3,8 +3,7 @@
 # imports
 from ctypes import windll, Structure, c_ulong, byref
 from time import gmtime,strftime
-from tkinter import *
-import time, math, csv
+import time, math, csv, pyHook, pythoncom
 
 # Storage
 posX = []
@@ -47,51 +46,54 @@ def listAppender(pX,pY,delX,delY,m,pW,pA,pS,pD):
     Ds.append(pD)
 
 # Commands for individual keypresses
-def keypress(event):
-    if event.keysym == "F9":
+def onDown(event):
+    if event.KeyID == 120:
         print("Toggle logging...")
         global capture
         capture = 1 - capture
-    elif event.char == "a":
+    elif event.KeyID == 65:
         global prevA
         prevA = 1
-    elif event.char == "s":
+    elif event.KeyID == 83:
         global prevS
         prevS = 1
-    elif event.char == "w":
+    elif event.KeyID == 87:
         global prevW
         prevW = 1
-    elif event.char == "d":
+    elif event.KeyID == 68:
         global prevD
         prevD = 1
+    return True
 
 # Commands for key release
-def keyrelease(event):
-    if event.char == "a":
+def onUp(event):
+    if event.KeyID == 65:
         global prevA
         prevA = 0
-    if event.char == "s":
+    if event.KeyID == 83:
         global prevS
         prevS = 0
-    if event.char == "w":
+    if event.KeyID == 87:
         global prevW
         prevW = 0
-    if event.char == "d":
+    if event.KeyID == 68:
         global prevD
         prevD = 0
+    return True
 
 # Primary code
 tX,tY = queryMousePosition()
 prevX = tX
 prevY = tY
-root = Tk()
-root.bind_all('<KeyPress>',keypress)
-root.bind_all('<KeyRelease>',keyrelease)
-root.withdraw()
+
+hm = pyHook.HookManager()
+hm.KeyDown = onDown
+hm.KeyUp = onUp
+hm.HookKeyboard()
+
 try:
     while(True): # Logging loop!
-        root.update()
-        print(step)
+        pythoncom.PumpWaitingMessages()
         step = step + 1
         pX,pY = queryMousePosition()
         dX = abs(prevX - pX)
