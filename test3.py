@@ -6,27 +6,21 @@ prev = 0
 p = []
 
 def OnDown(event):
-    #global prev
-    print(event.KeyID)
-    #prev = 1
+    print("Down")
     return True
 
 def OnUp(event):
-    #global prev
-    #prev = 0
+    print("Up")
     return True
 
 hm = pyHook.HookManager()
-hm.KeyDown = OnDown
-hm.KeyUp = OnUp
-hm.HookKeyboard()
+hm.MouseLeftDown = OnDown
+hm.MouseLeftUp = OnUp
+hm.HookMouse()
 
 it = 0
-while(it < 100):
-    p.append(prev)
+while(True):
     pythoncom.PumpWaitingMessages()
-    it = it + 1
-    time.sleep(0.1)
 
 #timestamp = strftime("INPUT2-%Y-%m-%d-%H-%M-%S",gmtime())
 #with open("Raw Outputs/%s.csv"%timestamp,"w",newline='') as f:
